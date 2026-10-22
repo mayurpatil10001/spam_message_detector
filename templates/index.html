@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpamShield | Message Detector</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">S</span> SpamShield</a>
+    <div class="nav-links"><a href="{{ url_for('index') }}">Detector</a><a href="{{ url_for('about') }}">About</a></div>
+  </nav>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow"><span class="pulse"></span> NLP-POWERED MESSAGE CHECKER</div>
+      <h1>Spot spam.<br><span>Stay one step ahead.</span></h1>
+      <p class="hero-copy">Paste an SMS or message below. Our machine-learning model checks its language patterns and predicts whether it looks like spam.</p>
+    </section>
+
+    <section class="workspace">
+      <div class="panel input-panel">
+        <div class="panel-heading">
+          <div><div class="step">01 / INPUT</div><h2>Check a message</h2></div>
+          <span class="pill">Text analysis</span>
+        </div>
+        <form method="POST" action="{{ url_for('index') }}">
+          <label for="message">Message content</label>
+          <textarea id="message" name="message" maxlength="2000" placeholder="Example: Congratulations! You have won a free prize. Claim now..." required>{{ message }}</textarea>
+          <div class="input-meta"><span>Do not include passwords or private information.</span><span id="char-count">0 / 2000</span></div>
+          <button class="primary-btn" type="submit">Analyze message <span>→</span></button>
+        </form>
+        <div class="examples">
+          <span class="examples-label">TRY AN EXAMPLE</span>
+          <button type="button" class="example-chip" data-message="Congratulations! You have won a free prize. Call now to claim">Possible spam</button>
+          <button type="button" class="example-chip" data-message="Hey, are we still meeting for lunch today?">Normal message</button>
+        </div>
+      </div>
+
+      <div class="panel result-panel">
+        <div class="panel-heading"><div><div class="step">02 / RESULT</div><h2>Analysis report</h2></div><span class="status-dot"></span></div>
+        {% if result %}
+          <div class="result-card {{ 'spam' if result.label == 'spam' else 'ham' }}">
+            <div class="result-icon">{{ '!' if result.label == 'spam' else '✓' }}</div>
+            <div><div class="result-kicker">PREDICTION</div><div class="result-title">{{ 'Likely Spam' if result.label == 'spam' else 'Likely Legitimate' }}</div></div>
+          </div>
+          <div class="confidence-row"><span>Model confidence</span><strong>{{ result.confidence }}%</strong></div>
+          <div class="meter"><div class="meter-fill {{ 'fill-spam' if result.label == 'spam' else 'fill-ham' }}" style="width: {{ result.confidence }}%"></div></div>
+          <div class="divider"></div>
+          <h3>Language signals</h3>
+          <p class="muted small">Simple indicators found in the message. These are clues, not a full explanation of the model.</p>
+          <ul class="signal-list">
+            {% for signal in result.signals %}<li><span>↗</span>{{ signal }}</li>{% endfor %}
+          </ul>
+          <div class="notice"><strong>Important:</strong> This is an educational demo trained on a small sample dataset. Do not use its prediction as the only basis for deciding whether a message is safe.</div>
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-illustration"><div class="doc-icon"><span></span><span></span><span></span></div><div class="magnifier"></div></div>
+            <h3>Your result will appear here</h3>
+            <p>Enter a message and select <b>Analyze message</b> to see the prediction, confidence score, and language clues.</p>
+            <div class="mini-steps"><span>1. Paste text</span><i>→</i><span>2. Analyze</span><i>→</i><span>3. Review</span></div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="feature-grid">
+      <article class="feature"><div class="feature-icon purple">Aa</div><h3>Text vectorization</h3><p>TF-IDF converts message words and phrases into numeric features.</p></article>
+      <article class="feature"><div class="feature-icon blue">◎</div><h3>Machine learning</h3><p>Logistic Regression learns patterns associated with spam and legitimate messages.</p></article>
+      <article class="feature"><div class="feature-icon green">↗</div><h3>Instant prediction</h3><p>Get a label and model confidence directly in the browser.</p></article>
+    </section>
+    <footer><span>SpamShield · College NLP Project</span><span>Built with Flask + scikit-learn</span></footer>
+  </main>
+  <script>
+    const textarea = document.getElementById('message');
+    const counter = document.getElementById('char-count');
+    function updateCount(){ counter.textContent = `${textarea.value.length} / 2000`; }
+    textarea.addEventListener('input', updateCount); updateCount();
+    document.querySelectorAll('.example-chip').forEach(button => {
+      button.addEventListener('click', () => { textarea.value = button.dataset.message; updateCount(); textarea.focus(); });
+    });
+  </script>
+</body>
+</html>

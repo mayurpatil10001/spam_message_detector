@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>About | SpamShield</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<nav class="nav"><a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">S</span> SpamShield</a><div class="nav-links"><a href="{{ url_for('index') }}">Detector</a><a href="{{ url_for('about') }}">About</a></div></nav>
+<main class="container about-container">
+  <div class="eyebrow"><span class="pulse"></span> PROJECT OVERVIEW</div>
+  <h1 class="about-title">How SpamShield works</h1>
+  <p class="hero-copy">A beginner-friendly web application that combines Natural Language Processing (NLP) and supervised machine learning to classify text messages.</p>
+  <section class="panel about-panel">
+    <h2>Processing pipeline</h2>
+    <div class="pipeline">
+      <div><b>01</b><strong>Input</strong><p>User enters message text.</p></div><span>→</span>
+      <div><b>02</b><strong>TF-IDF</strong><p>Text becomes numeric features.</p></div><span>→</span>
+      <div><b>03</b><strong>Classifier</strong><p>Logistic Regression predicts a label.</p></div><span>→</span>
+      <div><b>04</b><strong>Result</strong><p>Show class and confidence.</p></div>
+    </div>
+    <h2>Technology stack</h2>
+    <ul class="tech-list"><li>Python — core programming language</li><li>Flask — web framework and routing</li><li>scikit-learn — TF-IDF and Logistic Regression</li><li>HTML/CSS/JavaScript — user interface and character counter</li><li>joblib — save and load the trained pipeline</li></ul>
+    <div class="notice"><strong>Dataset limitation:</strong> This starter version uses a small built-in example dataset so it works immediately. Its confidence score is not a calibrated measure of real-world reliability. For a stronger academic evaluation, train and test on a larger labeled SMS dataset using a held-out test split.</div>
+  </section>
+  <a class="primary-btn inline-btn" href="{{ url_for('index') }}">← Back to detector</a>
+</main>
+</body></html>
